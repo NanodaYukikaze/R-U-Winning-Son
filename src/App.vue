@@ -126,7 +126,7 @@ onMounted(async () => {
 
   try {
     // 读取 public/data.json
-    const response = await fetch(`${baseUrl}public/data.json`)
+    const response = await fetch(`${baseUrl}data.json`)
     const data = await response.json()
     
     let total = 0
