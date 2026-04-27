@@ -155,16 +155,17 @@ onMounted(async () => {
 /* 全局基础设置 */
 body, html { 
   margin: 0; padding: 0; 
-  background-color: #f6f8fa; 
+  background-color:transparent !important; 
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 #bg-layer { 
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-  background-size: cover; background-position: center; z-index: -1; 
+  background-size: cover; background-position: center; z-index: 0; 
 }
 
 .dashboard-wrapper { 
+  position: relative; z-index: 10;
   max-width: 750px; 
   margin: 50px auto; 
   padding: 0 20px; 
