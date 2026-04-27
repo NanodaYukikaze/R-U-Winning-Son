@@ -1,13 +1,13 @@
 <template>
-  <div id="bg-layer" style="background-image: url('')"></div>
+  <div id="bg-layer" :style="bgStyle"></div>
 
   <div class="dashboard-wrapper">
     
     <header class="profile-section">
-      <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="Avatar" class="avatar">
+      <img :src="userConfig.avatar" alt="Avatar" class="avatar" @error="handleAvatarError">
       <div class="profile-info">
-        <h1 class="username">@MyGitHubName</h1>
-        <p class="signature">在虚拟的世界中寻找真实的感动</p>
+        <h1 class="username">{{userConfig.username}}</h1>
+        <p class="signature">{{userConfig.signature}}</p>
         <p class="total-time">总计游玩: <span class="highlight">{{ formatTime(totalMinutes) }}</span></p>
       </div>
     </header>
@@ -46,12 +46,33 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const loading = ref(true)
 const totalMinutes = ref(0)
 const groupedTimeline = ref([])
 const gameCache = {}
+
+// --- 用户配置状态 ---
+const userConfig = ref({
+  username: "@Loading",
+  signature: "正在加载用户信息...",
+  avatar: "",
+  background: ""
+})
+
+// 计算背景样式
+const bgStyle = computed(() => {
+  if (userConfig.value.background) {
+    return { backgroundImage: `url(${userConfig.value.background})` }
+  }
+  return { backgroundColor: '#f6f8fa' } // 默认背景色
+})
+
+// 头像加载失败的兜底
+const handleAvatarError = (e) => {
+  e.target.src = 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png'
+}
 
 const formatTime = (m) => m < 60 ? `${m} 分钟` : `${(m / 60).toFixed(1)} 小时`
 
@@ -82,9 +103,30 @@ const fetchGameInfo = async (id) => {
 }
 
 onMounted(async () => {
+  const baseUrl = import.meta.env.BASE_URL
+
+  try {
+    // 读取文字配置
+    const configRes = await fetch(`${baseUrl}user_config/config.json`)
+    if (configRes.ok) {
+      const configData = await configRes.json()
+      userConfig.value.username = configData.username
+      userConfig.value.signature = configData.signature
+    }
+
+    // 设置图片路径 (加上时间戳防止浏览器缓存不更新)
+    const timestamp = new Date().getTime()
+    userConfig.value.avatar = `${baseUrl}user_config/avatar.jpg?t=${timestamp}`
+    userConfig.value.background = `${baseUrl}user_config/background.jpg?t=${timestamp}`
+  } catch (e) {
+    console.error("无法加载用户配置，将使用默认值")
+    userConfig.value.username = "@MyProfile"
+    userConfig.value.signature = "在这里设置你的个性签名"
+  }
+
   try {
     // 读取 public/data.json
-    const response = await fetch('data.json')
+    const response = await fetch(`${baseUrl}public/data.json`)
     const data = await response.json()
     
     let total = 0
