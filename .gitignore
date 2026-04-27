@@ -37,3 +37,6 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
+
+# 忽略本地的 Python 游戏路径映射文件
+game_mappings.json

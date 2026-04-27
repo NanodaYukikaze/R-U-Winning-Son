@@ -84,7 +84,7 @@ const fetchGameInfo = async (id) => {
 onMounted(async () => {
   try {
     // 读取 public/data.json
-    const response = await fetch('/data.json')
+    const response = await fetch('data.json')
     const data = await response.json()
     
     let total = 0
