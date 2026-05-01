@@ -165,11 +165,11 @@ body, html {
 
 #bg-layer { 
   position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-  background-size: cover; background-position: center; z-index: 0; 
+  background-size: cover; background-position: center; z-index: -1; 
 }
 
 .dashboard-wrapper { 
-  position: relative; z-index: 10;
+  position: relative;
   max-width: 750px; 
   margin: 50px auto; 
   padding: 0 20px; 
