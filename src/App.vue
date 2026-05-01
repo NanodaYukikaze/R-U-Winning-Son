@@ -6,9 +6,9 @@
     <header class="profile-section">
       <img :src="userConfig.avatar" alt="Avatar" class="avatar" @error="handleAvatarError">
       <div class="profile-info">
-        <h1 class="username">{{userConfig.username}}</h1>
-        <p class="signature">{{userConfig.signature}}</p>
-        <p class="total-time">总计游玩: <span class="highlight">{{ formatTime(totalMinutes) }}</span></p>
+        <h1 class="username auto-invert-text">{{userConfig.username}}</h1>
+        <p class="signature auto-invert-text">{{userConfig.signature}}</p>
+        <p class="total-time auto-invert-text">总计游玩: <span class="highlight">{{ formatTime(totalMinutes) }}</span></p>
       </div>
     </header>
 
@@ -260,4 +260,16 @@ body, html {
 }
 
 .playtime { font-size: 14px; color: #666; font-weight: 500; }
+
+.auto-invert-text {
+  /* 必须先设置为纯白色，差值模式下的白色才能完美反转出黑白效果 */
+  color: #ffffff; 
+  
+  /* 核心魔法：差值混合模式 */
+  mix-blend-mode: difference;
+  
+  /* 提升渲染层级，确保它能正确与其下方的背景图进行混合计算 */
+  position: relative;
+  z-index: 10;
+}
 </style>
