@@ -161,6 +161,7 @@ body, html {
 
 #app {
   background: transparent !important;
+  isolation: isolate;
 }
 
 #bg-layer { 
