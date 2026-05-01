@@ -181,8 +181,8 @@ body, html {
 /* ================= 核心：毛玻璃玻璃容器样式 ================= */
 .glass-container {
   background: rgba(255, 255, 255, 0.45); /* 半透明底色 */
+  -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(25px); /* 高斯模糊 */
-  -webkit-backdrop-filter: blur(25px);
   border: 1px solid rgba(255, 255, 255, 0.5); /* 边缘高光线 */
   border-radius: 28px; /* 大圆角 */
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
