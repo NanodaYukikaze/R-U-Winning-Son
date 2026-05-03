@@ -17,10 +17,34 @@ import sys     # 【新增】：用于获取当前 Python 解释器或 EXE 的�
 import pystray            # 【新增】：用于系统托盘
 from PIL import Image     # 【新增】：用于生成/加载托盘图标
 
-# ================= 配置区 =================
-# 自适应获取脚本所在的绝对路径作为项目根目录
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+def get_resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        # 运行环境是打包后的 .exe 文件，返回解压后的临时目录路径
+        return os.path.join(sys._MEIPASS, relative_path)
+    
+    # 运行环境是本地开发脚本，返回当前项目根目录下的真实路径
+    return os.path.join(os.path.abspath("."), relative_path)
 
+def get_application_path():
+    """
+    智能获取数据应该保存的根目录。
+    确保无论是脚本运行还是 EXE 运行，都能定位到真实物理路径。
+    """
+    if getattr(sys, 'frozen', False):
+        # 如果是 PyInstaller 打包后的 exe 运行
+        # sys.executable 指向的是 main.exe 的绝对路径，我们取它的父目录
+        return os.path.dirname(sys.executable)
+    else:
+        # 如果是开发阶段的 python 脚本运行
+        # __file__ 指向的是 main.py 的路径，我们取它的父目录
+        return os.path.dirname(os.path.abspath(__file__))
+
+# 将 BASE_DIR 绑定为我们刚刚获取的真实路径
+
+# ================= 配置区 =================
+
+
+BASE_DIR = get_application_path()
 # 映射文件保存在根目录
 MAPPING_FILE = os.path.join(BASE_DIR, "game_mappings.json") 
 # 【修改点1】：数据文件保存在 public 文件夹下，完美适配 Vue 前端读取
@@ -39,7 +63,6 @@ IGNORE_EXES = {
     "asmonitorcontrol.exe", "onenote.exe", "word.exe", "excel.exe", "powerpnt.exe", "outlook.exe",
     "wechat.exe", "qq.exe", "discord.exe", "telegram.exe"
 }
-
 # ================= 记录配置 =================
 def load_json(filepath):
     if os.path.exists(filepath):
@@ -412,7 +435,7 @@ if __name__ == "__main__":
     monitor_thread.start()
 
     # 2. 定位到前端 Vue 打包好的 index.html 路径
-    html_path = os.path.join(BASE_DIR, "frontend_local", "dist", "index.html")
+    html_path = get_resource_path(os.path.join("frontend_local", "dist", "index.html"))
 
     # 3. 实例化 API 桥梁
     api = TrackerAPI()
