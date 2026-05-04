@@ -3,8 +3,10 @@ name: Deploy static content to Pages
 
 on:
   push:
-    branches: ["main", "master"] # 当你推送到 main 或 master 分支时触发
+    branches: ["main", "master","pages-template"] # 当你推送到 main 或 master 分支时触发
+  workflow_dispatch:
 
+    
 # 设置权限
 permissions:
   contents: read
